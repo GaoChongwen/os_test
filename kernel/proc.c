@@ -45,10 +45,10 @@ PUBLIC void schedule()
 			}
 		}
 
-		if (!greatest_ticks)
+		if (!greatest_ticks) // 所有ticks都是0，则全部都被停止了
 			for (p = &FIRST_PROC; p <= &LAST_PROC; p++)
 				if (p->p_flags == 0)
-					p->ticks = p->priority;
+					p->ticks = p->rank; // 重新赋予为当前的优先级
 	}
 }
 

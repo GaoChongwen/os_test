@@ -83,14 +83,16 @@ PUBLIC int kernel_main()
                         priv	= PRIVILEGE_TASK;
                         rpl     = RPL_TASK;
                         eflags  = 0x1202;/* IF=1, IOPL=1, bit 2 is always 1 */
-			prio    = 15;
+												p->rank = RR_TIME;
+												p->priority = 1;
                 }
                 else {                  /* USER PROC */
                         t	= user_proc_table + (i - NR_TASKS);
                         priv	= PRIVILEGE_USER;
                         rpl     = RPL_USER;
                         eflags  = 0x202;	/* IF=1, bit 2 is always 1 */
-			prio    = 5;
+												p->rank = RR_TIME*4;
+												p->priority = 0;
                 }
 
 		strcpy(p->name, t->name);	/* name of the process */
@@ -136,7 +138,7 @@ PUBLIC int kernel_main()
 		p->regs.esp	= (u32)stk;
 		p->regs.eflags	= eflags;
 
-		p->ticks = p->priority = prio;
+		p->ticks = RR_TIME;
 
 		p->p_flags = 0;
 		p->p_msg = 0;
@@ -1141,7 +1143,7 @@ void help()
 	printf("********************************************************************************\n");
 	printf("            (Add up to 19 commands)                                              \n");
 
-  milli_delay(5000);
+  milli_delay(10000);
 
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                      About Login                                               \n");
@@ -1150,7 +1152,7 @@ void help()
 	printf("        newLogin           |           Create a new user\n");
 	printf("        login  [user][pw]  |           Login \n");	
 	
-	milli_delay(5000);
+	milli_delay(10000);
 
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                      Little Commands                                           \n");
@@ -1160,7 +1162,7 @@ void help()
 	printf("        clear              |           Clean the screen\n");
 	printf("        help               |           List all commands\n");
 
-	milli_delay(5000);
+	milli_delay(10000);
 
   printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                       FS     Commands                                           \n");
@@ -1174,7 +1176,7 @@ void help()
 	printf("        save   [file]      |           Save the file\n");
 	printf("        edit   [file]      |           Edit file, cover the content\n");
 
- 	milli_delay(5000);
+ 	milli_delay(10000);
 
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                      Process Commands                                           \n");
@@ -1185,7 +1187,7 @@ void help()
 	printf("        kill   [proc]      |           Kill a process\n");
 
 
-	milli_delay(100);
+	milli_delay(10000);
 
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                      User   Exe                                        \n");

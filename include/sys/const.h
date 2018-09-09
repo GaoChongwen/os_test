@@ -48,6 +48,7 @@
 #define FREE_SLOT 0x20	/* set when proc table entry is not used
 			 * (ok to allocated to a new process)
 			 */
+#define RR_TIME   20
 
 /* TTY */
 #define NR_CONSOLES	3	/* consoles */
