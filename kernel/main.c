@@ -503,13 +503,14 @@ void shabby_shell(const char * tty_name)
 				  {
 				    login(arg1,arg2);
 				  }
-				 else if(strcmp(cmd,"welcome")==0)
-				 		{
-				 			welcome();
-				 		}
-				else if(strcmp(argv[0], "license") == 0){
-							return showLicense();
-				}
+				else if(strcmp(cmd,"welcome")==0)
+				 	{
+				 		welcome();
+				 	}
+				else if(strcmp(argv[0], "license") == 0)
+				  {
+					 showLicense();
+				  }
 				else if(strcmp(cmd,"newLogin")==0)
 				  {
 				    newLogin();
@@ -526,12 +527,24 @@ void shabby_shell(const char * tty_name)
 				  {
 				  	currentTime();
 				  }
-				else if(hasLogined()==0)
-				continue;
-				else if(strcmp(cmd,"proc")==0)
+					else if(strcmp(cmd,"proc")==0)
 					{
 						showProcess();
 					}
+				else if(strcmp(cmd,"kill")==0)
+					{
+						kill(arg1);
+					}
+				else if(strcmp(cmd,"pause")==0)
+					{
+						pause(arg1);
+					}
+				else if(strcmp(cmd,"resume")==0)
+					{
+						resume(arg1);
+					}
+				else if(hasLogined()==0)
+				continue;
 				else if (strcmp(cmd, "rdt") == 0)
 				  {
 				    unlink(arg1);
@@ -542,7 +555,6 @@ void shabby_shell(const char * tty_name)
 				  }		
 				else if (strcmp(cmd, "pwd") == 0)
 				  {
-				    // rrd(arg1);
 						pwd();
 				  }
 				else if(strcmp(cmd,"create")==0)
@@ -561,7 +573,6 @@ void shabby_shell(const char * tty_name)
 				  {
 				    readFile(arg1); 
 				  }
-		       
 				else if(strcmp(cmd,"ls")==0)
 					{
 				  	lsFile();	
@@ -1039,14 +1050,87 @@ int getPos()
 void showProcess()
 {	int i = 0;
 	printf("********************************************************************************\n");
-	printf("\tpid\t|\tname\t|\tpriority\t|\tf_flags(0 is runable)\n");
+	printf("    pid    |    name    |    priority    |    kill?\n");
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	for (i = 0; i < NR_TASKS + NR_PROCS; i++)
 	{
-		printf("\t%d\t|\t%s\t|\t%d\t|\t%d\n", i, proc_table[i].name, proc_table[i].priority, proc_table[i].p_flags);
+		printf("    %d    |    %s    |    %d    |    %d\n", i, proc_table[i].name, proc_table[i].priority, proc_table[i].p_flags);
 	}
 	printf("********************************************************************************\n");
 }
+/* kill */
+int kill(char * procName){
+	int i;
+	struct proc * p = proc_table;
+
+	for (i = 0; i < NR_TASKS + NR_NATIVE_PROCS; i++, p++) {
+		if (strcmp(procName, p->name) == 0) {
+			if (i < NR_TASKS) {
+				printf("Can`t kill system task!\n");
+				return 0;
+			}
+			else {
+				p->p_flags = -1;
+				p->priority = -1;
+				printf("Success!\n");
+				return 0;
+			}
+		}
+	}
+
+	printf("Please input correct proc name, you can use 'ps' command to see\n");
+  return 0;
+}
+
+/* pause */
+int pause(char * procName){
+	struct proc * p = proc_table;
+	int i;
+	for (i = 0; i < NR_TASKS + NR_NATIVE_PROCS; i++, p++) {
+		if (strcmp(procName, p->name) == 0) {
+			if (i < NR_TASKS) {
+				printf("Can`t pause system task!\n");
+				return 0;
+			}
+			else {
+				p->p_flags = -1;
+				printf("Success!\n");
+				return 0;
+			}
+		}
+	}
+
+	printf("Please input correct proc name, you can use 'ps' command to see\n");
+	return 0;
+}
+
+/* resume */
+int resume(char * procName) {
+	struct proc * p = proc_table;
+	int i;
+	
+	for (i = 0; i < NR_TASKS + NR_NATIVE_PROCS; i++, p++) {
+		if (strcmp(procName, p->name) == 0) {
+			if (p->p_flags == 0) {
+				printf("%s proc is running!\n", p->name);
+				return 0;
+			}
+			else if (p->priority == -1) {
+				printf("%s proc has been killed, can`t resume!\n", p->name);
+				return 0;
+			}
+			else {
+				p->p_flags = 0;
+				printf("Success!\n");
+				return 0;
+			}
+		}
+	}
+
+	printf("Please input correct proc name, you can use 'ps' command to see\n");
+	return 0;
+}
+
 
 /* Show Help Message */
 void help()
@@ -1057,7 +1141,7 @@ void help()
 	printf("********************************************************************************\n");
 	printf("            (Add up to 19 commands)                                              \n");
 
-  milli_delay(100);
+  milli_delay(5000);
 
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                      About Login                                               \n");
@@ -1066,7 +1150,7 @@ void help()
 	printf("        newLogin           |           Create a new user\n");
 	printf("        login  [user][pw]  |           Login \n");	
 	
-	milli_delay(100);
+	milli_delay(5000);
 
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                      Little Commands                                           \n");
@@ -1076,7 +1160,7 @@ void help()
 	printf("        clear              |           Clean the screen\n");
 	printf("        help               |           List all commands\n");
 
-	milli_delay(100);
+	milli_delay(5000);
 
   printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                       FS     Commands                                           \n");
@@ -1090,12 +1174,16 @@ void help()
 	printf("        save   [file]      |           Save the file\n");
 	printf("        edit   [file]      |           Edit file, cover the content\n");
 
- 	milli_delay(100);
+ 	milli_delay(5000);
 
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("                      Process Commands                                           \n");
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("        proc               |           List all process's message\n");
+	printf("        pause  [proc]      |           Pause a process\n");
+	printf("        resume [proc]      |           Resume a process\n");
+	printf("        kill   [proc]      |           Kill a process\n");
+
 
 	milli_delay(100);
 
