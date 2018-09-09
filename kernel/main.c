@@ -507,6 +507,9 @@ void shabby_shell(const char * tty_name)
 				 		{
 				 			welcome();
 				 		}
+				else if(strcmp(argv[0], "license") == 0){
+							return showLicense();
+				}
 				else if(strcmp(cmd,"newLogin")==0)
 				  {
 				    newLogin();
@@ -537,10 +540,11 @@ void shabby_shell(const char * tty_name)
 				  {
 				    save();
 				  }		
-				// else if (strcmp(cmd, "rrd") == 0)
-				//   {
-				//     rrd(arg1);
-				//   }
+				else if (strcmp(cmd, "pwd") == 0)
+				  {
+				    // rrd(arg1);
+						pwd();
+				  }
 				else if(strcmp(cmd,"create")==0)
 				  {
 				     createFile(arg1);
@@ -600,7 +604,7 @@ void shabby_shell(const char * tty_name)
 	     		}
 	     	else
 	     	{
-	     		printf("unknow command\n");
+	     		printf("unknown command\n");
 	     	}
 			}
 		}
@@ -925,6 +929,17 @@ void welcome()
 	for(i=0;i<8;i++)
 		printf("\n");
 }
+
+/* showLicense */
+void showLicense() {
+	printf("THE TRY-OS LICENSE\n");
+	printf("*****************************************************************************\n");
+	printf("****    May god always bless u.  :)                                      ****\n");
+	printf("****                            developers:    Lipeng Liang  1652667     ****\n");
+	printf("****                                           Yiwen  Cheng  1652660     ****\n");
+	printf("****                                           2018  08.15               ****\n");
+	printf("*****************************************************************************\n");
+}
 /* colorful */
 void colorful()
 {
@@ -1024,11 +1039,11 @@ int getPos()
 void showProcess()
 {	int i = 0;
 	printf("********************************************************************************\n");
-	printf("  pid  |    name    |    priority   |   f_flags(0 is runable)   \n");
+	printf("\tpid\t|\tname\t|\tpriority\t|\tf_flags(0 is runable)\n");
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	for (i = 0; i < NR_TASKS + NR_PROCS; i++)
 	{
-		printf("  %d |    %s      |       %d      |     %d   \n", i, proc_table[i].name, proc_table[i].priority, proc_table[i].p_flags);
+		printf("\t%d\t|\t%s\t|\t%d\t|\t%d\n", i, proc_table[i].name, proc_table[i].priority, proc_table[i].p_flags);
 	}
 	printf("********************************************************************************\n");
 }
@@ -1036,23 +1051,58 @@ void showProcess()
 /* Show Help Message */
 void help()
 {
+	
 	printf("********************************************************************************\n");
 	printf("        name               |                      function                      \n");
+	printf("********************************************************************************\n");
+	printf("            (Add up to 19 commands)                                              \n");
+
+  milli_delay(100);
+
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("                      About Login                                               \n");
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("        welcome            |           Welcome the users\n");
 	printf("        newLogin           |           Create a new user\n");
-	printf("        login  [user][pw]  |           Login \n");		
+	printf("        login  [user][pw]  |           Login \n");	
+	
+	milli_delay(100);
+
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("                      Little Commands                                           \n");
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("        license            |           See the license of TRY-OS.\n");
 	printf("        time               |           Print OS time\n");
 	printf("        clear              |           Clean the screen\n");
-	printf("        ls                 |           List all files in current file path\n");
 	printf("        help               |           List all commands\n");
-	printf("        proc               |           List all process's message\n");
-	printf("        print  [str]       |           Print a string\n");
+
+	milli_delay(100);
+
+  printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("                       FS     Commands                                           \n");
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("        ls                 |           List all files in current file path\n");
+	printf("        pwd                |           Show current location\n");
+	printf("        cd     [file]      |           Enter the file in current dir\n");
 	printf("        create [file]      |           Create a file\n");
 	printf("        read   [file]      |           Read a file\n");
 	printf("        delete [file]      |           Delete a file\n");
 	printf("        save   [file]      |           Save the file\n");
 	printf("        edit   [file]      |           Edit file, cover the content\n");
+
+ 	milli_delay(100);
+
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("                      Process Commands                                           \n");
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("        proc               |           List all process's message\n");
+
+	milli_delay(100);
+
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("                      User   Exe                                        \n");
+	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+	printf("        print  [str]       |           Print a string\n");
 	printf("        push               |           Start push game\n");
 	printf("        gomoku             |           Start gomoku\n");
 	printf("********************************************************************************\n");
@@ -1180,8 +1230,10 @@ void readFile(char * fileName)
   printf("content in %s: %s num: %d\n",fileName,rdbuf,r);
 }
 
-
-
+/* pwd */
+void pwd(){
+	printf("%s\n",location);
+}
 
 /* Delete File */
 void deleteFile(char * fileName)
@@ -1209,7 +1261,6 @@ int curPos = 0,i=1,j=1,pos=0;
  delete(pos);
  save();
 }
-
 
 void delete(int pos)
 {
@@ -1244,7 +1295,7 @@ void delete(int pos)
 
 
 
-/* Ls */
+/* ls */
 void lsFile()
 {
 	int curPos =0,pos=0,num=0,i=0;
@@ -1265,29 +1316,27 @@ void lsFile()
 	 printf("\n");
 }
 
-
+/* cd */
 void cdFile(char * fileName)
 {
 	int pos=-1;
 	 	
-  	if(strcmp(fileName,"..")==0)
+	if(strcmp(fileName,"..")==0)
 	{
 		cdBack();
 		return;
 	}
 
 	pos = isExist(fileName);
-	if(pos==-1)
-		 printf("no such file in it.\n");
-	   return;
 
-
+	if(pos==-1){
+    printf("no such file in it.\n");
+	  return;
+	}
 	clearArr(curFile,128);
 	strcpy(curFile,fileName);
 	strcat(location,"/");
 	strcat(location,fileName);	
-	
-	//printf("curfile:%s\n",curFile);
 	
 }
 void cdBack()
@@ -1321,34 +1370,7 @@ void cdBack()
 	    j++;
 	  }
 	curFile[j]='\0';
-	/* for(i=0;i<=curPos;i++) */
-	/* { */
-	/*   for(j=1;j<=FAT[i][0];j++) */
-	/*      { */
-	/* 	pos = FAT[i][j]; */
-	/* 	if(strcmp(fileNames[pos],fileNames[curPos])==0) */
-	/* 		{	printf("i:%d,j:%d curPos:%d",i,j,curPos); */
-	/* 		 	char temp[128]; */
-	/* 			clearArr(temp,128); */
-	/* 			memcpy(temp,location,strlen(location)-strlen(curFile)-1); */
-
-	/* 			clearArr(location,128); */
-	/* 			strcpy(location,temp); */
-					
-	/* 			clearArr(curFile,128); */
-	/* 			strcpy(curFile,fileNames[i]); */
-	/* 			printf("curfile:%s\n",curFile); */
-	/* 			break; */
-	/* 		} */
-	/*      } */
-	/* }		 */
-
 }
-
-
-
-
-
 
 PUBLIC int TESTA(char * topic)
 {
