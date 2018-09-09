@@ -358,14 +358,14 @@ void hello(){
 	clear();
 	char *hello = "\n\n"
 "                                                                       \n"
-"        ****     ****   **   ****     **   **       *******    ********\n"
-"       /**/**   **/**  /**  /**/**   /**  /**      **/////**  **////// \n"
-"       /**//** ** /**  /**  /**//**  /**  /**     **     //**/**       \n"
-"       /** //***  /**  /**  /** //** /**  /**    /**      /**/*********\n"
-"       /**  //*   /**  /**  /**  //**/**  /**    /**      /**////////**\n"
-"       /**   /    /**  /**  /**   //****  /**    //**     **        /**\n"
-"       /**        /**  /**  /**    //***  /**     //*******   ******** \n"
-"       //         //   //   //      ///   //       ///////   ////////  \n"
+" /***************   /*********    /****     ****    *******      ********\n"
+"  //////***/////   //**      /**   //***   ***     **/////**    **////// \n"
+"       /***        //**       /**    //** **      **     //** /**       \n"
+"       /***        //***********      //***      /**      /** /*********\n"
+"       /***        //**  /**           /***      /**      /** ////////**\n"
+"       /***        //**    /**         /***      //**     **         /**\n"
+"       /***        //**      /**       /***       //*******    ******** \n"
+"        ///        ////       ///       ///        ///////    ////////  \n"
 "                                                                       \n"
 "                                                                       \n"
 "                                                                       \n"
@@ -517,9 +517,9 @@ void shabby_shell(const char * tty_name)
 				  	realCreate(arg1);
 				  }
 				else if(strcmp(cmd,"proc")==0)
-				{
-					showProcess();
-				}
+					{
+						showProcess();
+					}
 				else if (strcmp(cmd, "rdt") == 0)
 				  {
 				    unlink(arg1);
@@ -554,56 +554,53 @@ void shabby_shell(const char * tty_name)
 				  }
 		       
 				else if(strcmp(cmd,"ls")==0)
-				{
+					{
 				  	lsFile();	
-				}
+					}
 				else if(strcmp(cmd,"cd")==0)
-				{
+					{
 					cdFile(arg1);
-				}
-			    else if(strcmp(cmd,"delete")==0)
-				{
+					}
+			  else if(strcmp(cmd,"delete")==0)
+					{
 					deleteFile(arg1);
-				}
+					}
 				else if(strcmp(cmd,"red")==0)
-				{
-					realEdit(arg1,arg2);
-				}
+					{
+						realEdit(arg1,arg2);
+					}
 				else if(strcmp(cmd,"initFLAT")==0)
-				{
-					for(i=0;i<10;i++)
-						for(j=0;j<fileSize;j++)
-							FAT[i][j]=0;
-				}
+					{
+						for(i=0;i<10;i++)
+							for(j=0;j<fileSize;j++)
+								FAT[i][j]=0;
+					}
 				
 				else if(strcmp(cmd,"testArr")==0)
 				  {
-				   
-				    printf("location:%s\n",location);
-				    printf("fileNames:\n");
-			        
+						printf("location:%s\n",location);
+				    printf("fileNames:\n");  
 				    for(i=0;i<20;i++)
 				      printf("%s | ",fileNames[i]);
 				    printf("FAT:\n");
 
 				    for(i=0;i<10;i++)
-				      {
-					for(j=0;j<fileSize;j++)
-					  printf("%d",FAT[i][j]);
-					printf("\n");
-				      }
+				    {
+							for(j=0;j<fileSize;j++)
+								printf("%d",FAT[i][j]);
+							printf("\n");
+				    }
 				    printf("current file nums %d\n",fileCount);
 				    printf("current User: %s\n",curUser);		    
-	     		  }
-	     		  else
-	     		  {
-	     		  	printf("unknow command\n");
-	     		  }
-				
-				
+	     		}
+	     	else
+	     	{
+	     		printf("unknow command\n");
+	     	}
 			}
 		}
 		else {
+			// printf("in other commands\n");
 			close(fd);
 			int pid = fork();
 			if (pid != 0) { /* parent */
@@ -611,6 +608,7 @@ void shabby_shell(const char * tty_name)
 				wait(&s);
 			}
 			else {	/* child */
+			  // printf("enter child process.\n");
 				execv(argv[0], argv);
 			}
 		}
