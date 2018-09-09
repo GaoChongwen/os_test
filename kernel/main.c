@@ -181,6 +181,21 @@ PUBLIC int get_ticks()
 	return msg.RETVAL;
 }
 
+struct time get_time_RTC()
+{
+	struct time t;
+	MESSAGE msg;
+	msg.type = GET_RTC_TIME;
+	msg.BUF= &t;
+	send_recv(BOTH, TASK_SYS, &msg);
+	return t;
+}
+
+int currentTime() {
+	struct time t = get_time_RTC();
+	printf("%d/%d/%d %d:%d:%d\n", t.year, t.month, t.day, (t.hour+15)%24, t.minute, t.second);
+	return 0;
+}
 
 /**
  * @struct posix_tar_header
@@ -358,14 +373,14 @@ void hello(){
 	clear();
 	char *hello = "\n\n"
 "                                                                       \n"
-" /***************   /*********    /****     ****    *******      ********\n"
-"  //////***/////   //**      /**   //***   ***     **/////**    **////// \n"
-"       /***        //**       /**    //** **      **     //** /**       \n"
-"       /***        //***********      //***      /**      /** /*********\n"
-"       /***        //**  /**           /***      /**      /** ////////**\n"
-"       /***        //**    /**         /***      //**     **         /**\n"
-"       /***        //**      /**       /***       //*******    ******** \n"
-"        ///        ////       ///       ///        ///////    ////////  \n"
+" /***************  /*********    /****     ****    *******      ********\n"
+"  //////***/////   /**      /**   //***   ***     **/////**    **////// \n"
+"       /***        /**       /**    //** **      **     //** /**       \n"
+"       /***        /***********      //***      /**      /** /*********\n"
+"       /***        /**  /**           /***      /**      /** ////////**\n"
+"       /***        /**    /**         /***      //**     **         /**\n"
+"       /***        /**      /**       /***       //*******    ******** \n"
+"        ///        ///       ///       ///        ///////    ////////  \n"
 "                                                                       \n"
 "                                                                       \n"
 "                                                                       \n"
@@ -496,10 +511,6 @@ void shabby_shell(const char * tty_name)
 				  {
 				    newLogin();
 				  }
-				  // else if (strcmp(cmd, "rrd") == 0)
-				  // {
-				  //   rrd(arg1);
-				  // }
 				  else if(strcmp(cmd,"clear")==0)
 				  {
 				  	clear();
@@ -508,7 +519,10 @@ void shabby_shell(const char * tty_name)
 				  {
 				  	help();
 				  }
-
+					else if(strcmp(cmd,"time")==0)
+				  {
+				  	currentTime();
+				  }
 				else if(hasLogined()==0)
 				continue;
 				else if(strcmp(cmd,"proc")==0)
@@ -1027,7 +1041,8 @@ void help()
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("        welcome            |           Welcome the users\n");
 	printf("        newLogin           |           Create a new user\n");
-	printf("        login  [user][pw]  |           Login \n");
+	printf("        login  [user][pw]  |           Login \n");		
+	printf("        time               |           Print OS time\n");
 	printf("        clear              |           Clean the screen\n");
 	printf("        ls                 |           List all files in current file path\n");
 	printf("        help               |           List all commands\n");
