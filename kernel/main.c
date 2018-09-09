@@ -527,7 +527,7 @@ void shabby_shell(const char * tty_name)
 				//   {
 				//     rrd(arg1);
 				//   }
-				else if(strcmp(cmd,"ct")==0)
+				else if(strcmp(cmd,"create")==0)
 				  {
 				     createFile(arg1);
 				  }
@@ -1033,7 +1033,7 @@ void help()
 	printf("        help               |           List all commands\n");
 	printf("        proc               |           List all process's message\n");
 	printf("        print  [str]       |           Print a string\n");
-	printf("        ct     [file]      |           Create a file\n");
+	printf("        create [file]      |           Create a file\n");
 	printf("        read   [file]      |           Read a file\n");
 	printf("        delete [file]      |           Delete a file\n");
 	printf("        save   [file]      |           Save the file\n");
