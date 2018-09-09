@@ -32,7 +32,7 @@ char curFile[128]="User";
 char fileNames[20][128]={"User"};
 int fileCount=0;
 char password[10]="123";
-char curUser[10]="sjw";
+char curUser[10]="llp";
 
 
 int flag=0;
@@ -373,16 +373,15 @@ void hello(){
 "                                                                       \n"
 "                                                                       \n"
 "*****************************************************************************\n"
-"****                     welcome to our os                               ****\n"
-"****                            made by:       Shen Jinwei   1552756     ****\n"
-"****                                           Chen    hui   1552698     ****\n"
-"****                                           Cai  Xuyang   1552734     ****\n"
-"****                                           2017  8.15                ****\n"
+"****                     welcome to =try-os=                               ****\n"
+"****                            developers:    Lipeng  Liang 1652667     ****\n"
+"****                                           Yiwen   Cheng 1652660     ****\n"
+"****                                           2018  08.15                ****\n"
 "*****************************************************************************\n";
 	int ch = 0;
 	for (ch = 0; ch <= strlen(hello); ch++){
 		printl("%c", hello[ch]);
-		milli_delay(20);
+		milli_delay(10);
 	}
 
 
@@ -497,10 +496,10 @@ void shabby_shell(const char * tty_name)
 				  {
 				    newLogin();
 				  }
-				  else if (strcmp(cmd, "rrd") == 0)
-				  {
-				    rrd(arg1);
-				  }
+				  // else if (strcmp(cmd, "rrd") == 0)
+				  // {
+				  //   rrd(arg1);
+				  // }
 				  else if(strcmp(cmd,"clear")==0)
 				  {
 				  	clear();
@@ -512,10 +511,6 @@ void shabby_shell(const char * tty_name)
 
 				else if(hasLogined()==0)
 				continue;
-				  else if(strcmp(cmd,"rct")==0)
-				  {
-				  	realCreate(arg1);
-				  }
 				else if(strcmp(cmd,"proc")==0)
 					{
 						showProcess();
@@ -528,14 +523,10 @@ void shabby_shell(const char * tty_name)
 				  {
 				    save();
 				  }		
-				else if (strcmp(cmd, "rrd") == 0)
-				  {
-				    rrd(arg1);
-				  }
-				else if (strcmp(cmd, "rwd") == 0)
-				  {
-				    rwd(arg1);
-				  }
+				// else if (strcmp(cmd, "rrd") == 0)
+				//   {
+				//     rrd(arg1);
+				//   }
 				else if(strcmp(cmd,"ct")==0)
 				  {
 				     createFile(arg1);
@@ -729,12 +720,6 @@ void createAll()
 
 }
 
-void realCreate(char *fileName)
-{
-	int fd = open(fileName,O_CREAT);
-	close(fd);
-}
-
 void realEdit(char *fileName,char* content)
 {
 	int fd = open(fileName,O_RDWR);
@@ -805,33 +790,19 @@ void save()
 	  	
 }
 
-void rrd(char* fileName)
-{
-  int fd=-1,r=0;
-  char temp[128];
+// void rrd(char* fileName)
+// {
+//   int fd=-1,r=0;
+//   char temp[128];
 
-  clearArr(temp,128);
-  fd=open(fileName,O_RDWR);
-  assert(fd!=-1);
-  r = read(fd,temp,10);
-  close(fd);
+//   clearArr(temp,128);
+//   fd=open(fileName,O_RDWR);
+//   assert(fd!=-1);
+//   r = read(fd,temp,30);
+//   close(fd);
   
-  printf("content in %s %d\n",temp,r);
-}
-
-void rwd(char * fileName)
-{
-   int fd=-1,r=0;
-   char temp[128];
-
-   clearArr(temp,128);
-   read(0,temp,128);
-   fd=open(fileName,O_RDWR | O_CREAT);
-   assert(fd!=-1);
-   r = write(fd,temp,10);
-   close(fd);
-}
-
+//   printf("content in %s %d\n",temp,r);
+// }
 
 /* Init FS */
 void initFs()
@@ -931,11 +902,10 @@ void welcome()
 		printf("\n");
 
 	printf("*****************************************************************************\n");
-	printf("****                     welcome to our os                               ****\n");
-	printf("****                            made by:       Shen Jinwei   1552756     ****\n");
-	printf("****                                           Chen    hui   1552698           ****\n" );
-	printf("****                                           Cai  Xuyang   1552734     ****\n");
-	printf("****                                           2017  8.15                ****\n");
+	printf("****                     welcome to try os                               ****\n");
+	printf("****                            developers:    Lipeng Liang  1652667     ****\n");
+	printf("****                                           Yiwen  Cheng  1652660     ****\n" );
+	printf("****                                           2018  08.15               ****\n");
 	printf("*****************************************************************************\n");
 
 	for(i=0;i<8;i++)
@@ -1040,11 +1010,11 @@ int getPos()
 void showProcess()
 {	int i = 0;
 	printf("********************************************************************************\n");
-	printf("        name        |        priority        |        f_flags(0 is runable)        \n");
+	printf("  pid  |    name    |    priority   |   f_flags(0 is runable)   \n");
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	for (i = 0; i < NR_TASKS + NR_PROCS; i++)
 	{
-		printf("        %s                   %d                      %d        %d\n", proc_table[i].name, proc_table[i].priority, proc_table[i].p_flags,i);
+		printf("  %d |    %s      |       %d      |     %d   \n", i, proc_table[i].name, proc_table[i].priority, proc_table[i].p_flags);
 	}
 	printf("********************************************************************************\n");
 }
@@ -1056,20 +1026,19 @@ void help()
 	printf("        name               |                      function                      \n");
 	printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("        welcome            |           Welcome the users\n");
+	printf("        newLogin           |           Create a new user\n");
+	printf("        login  [user][pw]  |           Login \n");
 	printf("        clear              |           Clean the screen\n");
 	printf("        ls                 |           List all files in current file path\n");
 	printf("        help               |           List all commands\n");
 	printf("        proc               |           List all process's message\n");
-	printf("        caculator          |           Start a simply caculator\n");
 	printf("        print  [str]       |           Print a string\n");
-	printf("        ct[file]           |           Create a file\n");
+	printf("        ct     [file]      |           Create a file\n");
 	printf("        read   [file]      |           Read a file\n");
 	printf("        delete [file]      |           Delete a file\n");
+	printf("        save   [file]      |           Save the file\n");
 	printf("        edit   [file]      |           Edit file, cover the content\n");
-	printf("        newLogin           |           Create a new user\n");
-	printf("        login  [user][pass]|           Login \n");
 	printf("        push               |           Start push game\n");
-	printf("        caculator          |           Open caculator\n");
 	printf("        gomoku             |           Start gomoku\n");
 	printf("********************************************************************************\n");
 	
@@ -1294,6 +1263,7 @@ void cdFile(char * fileName)
 
 	pos = isExist(fileName);
 	if(pos==-1)
+		 printf("no such file in it.\n");
 	   return;
 
 
